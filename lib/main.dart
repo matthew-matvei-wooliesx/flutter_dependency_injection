@@ -47,6 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
               'The current count is:',
             ),
             Consumer(builder: (_, watch, __) {
+              // PoC note: While it would be nice to have this dependency more
+              // clearly declared, e.g. as a field of this class whose value is
+              // injected through a constructor argument, the `counter` is better
+              // dereferenced here from `counterNotifierProvider` rather than
+              // higher in this widget's build method for performance reasons:
+              // when `counterNotifierProvider` notifies of changes, only this
+              // `Consumer` needs to be rebuilt, instead of unnecessarily
+              // rebuilding other widgets higher up in the tree
               final counter = watch(counterNotifierProvider);
               return Text(
                   counter.count.toRadixString(10),
