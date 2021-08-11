@@ -1,23 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-abstract class Counter {
-  int get count;
-  void increment();
-}
-
-final _singleStepCounterProvider = Provider((ref) => _SingleStepCounter());
-final _doubleStepCounterProvider = Provider((ref) => _DoubleStepCounter());
 final counterNotifierProvider = ChangeNotifierProvider<_CounterNotifier>((ref) {
   final counter = ref.read(_singleStepCounterProvider);
 
   return _CounterNotifier(counter);
 });
 
-class _CounterNotifier extends ChangeNotifier {
-  final Counter _counter;
+final _singleStepCounterProvider = Provider((ref) => _SingleStepCounter());
+final _doubleStepCounterProvider = Provider((ref) => _DoubleStepCounter());
 
-  _CounterNotifier(Counter counter) : _counter = counter;
+class _CounterNotifier extends ChangeNotifier {
+  final _Counter _counter;
+
+  _CounterNotifier(_Counter counter) : _counter = counter;
 
   int get count => _counter.count;
   void increment() {
@@ -26,7 +22,12 @@ class _CounterNotifier extends ChangeNotifier {
   }
 }
 
-class _SingleStepCounter implements Counter {
+abstract class _Counter {
+  int get count;
+  void increment();
+}
+
+class _SingleStepCounter implements _Counter {
   int _count = 0;
   final int step = 1;
 
@@ -39,7 +40,7 @@ class _SingleStepCounter implements Counter {
   }
 }
 
-class _DoubleStepCounter implements Counter {
+class _DoubleStepCounter implements _Counter {
   int _count = 0;
   final int step = 2;
 
