@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dependency_injection/counter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,12 +29,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    context.read(counterNotifierProvider).increment();
   }
 
   @override
@@ -46,12 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'The current count is:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            Consumer(builder: (_, watch, __) {
+              final counter = watch(counterNotifierProvider);
+              return Text(
+                  counter.count.toRadixString(10),
+                  style: Theme.of(context).textTheme.headline4);
+            }),
           ],
         ),
       ),
