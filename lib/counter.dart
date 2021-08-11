@@ -6,10 +6,10 @@ abstract class Counter {
   void increment();
 }
 
-final singleStepCounterProvider = Provider((ref) => _SingleStepCounter());
-final doubleStepCounterProvider = Provider((ref) => _DoubleStepCounter());
+final _singleStepCounterProvider = Provider((ref) => _SingleStepCounter());
+final _doubleStepCounterProvider = Provider((ref) => _DoubleStepCounter());
 final counterNotifierProvider = ChangeNotifierProvider<_CounterNotifier>((ref) {
-  final counter = ref.read(singleStepCounterProvider);
+  final counter = ref.read(_singleStepCounterProvider);
 
   return _CounterNotifier(counter);
 });
