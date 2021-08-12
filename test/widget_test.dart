@@ -25,19 +25,25 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 
+  /// _PoC note:_ This test only demonstrates how we can use overrides in a
+  /// 'ProviderScope' in order to substitute dependencies for the purposes of
+  /// testing. This won't always be necessary or desirable, but will be
+  /// essential in certain scenarios to keep tests contained, e.g. mocking
+  /// proxy or repository layers that would ordinarily make HTTP requests or
+  /// save data to a DB.
   testWidgets(
       'Demonstrate substituting counter implementation for test purposes',
           (WidgetTester tester) async {
-        // Arrange
-        final mockCounterNotifier = _MockCounterNotifier();
+            // Arrange
+            final mockCounterNotifier = _MockCounterNotifier();
 
-        await tester.pumpWidget(
-          ProviderScope(
-              child: MyApp(),
-              overrides: [
-                counterNotifierProvider.overrideWithValue(mockCounterNotifier)
-              ],)
-        );
+            await tester.pumpWidget(
+              ProviderScope(
+                  child: MyApp(),
+                  overrides: [
+                    counterNotifierProvider.overrideWithValue(mockCounterNotifier)
+                  ],)
+            );
 
             // Act
             await tester.tap(find.byIcon(Icons.add));

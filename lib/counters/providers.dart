@@ -1,6 +1,15 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+/// _poC note:_ Separating the Riverpod Providers for counters into a separate
+/// library promotes 'counter.dart' having publicly accessible (and therefore
+/// more easily testable) code. If these providers were kept in the 'counter.dart'
+/// library, then important classes such as 'CounterNotifier' could remain
+/// private implementation details of the providers. Since the provided objects
+/// should be able to stand on their own without Riverpod, this would be
+/// excessive privatisation.
+library counters.providers;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'counter.dart';
+
 
 /// Provides a [CounterNotifier].
 ///
