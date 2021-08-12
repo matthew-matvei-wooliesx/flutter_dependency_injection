@@ -1,15 +1,11 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dependency_injection/counters/counter.dart';
+import 'package:flutter_dependency_injection/counters/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_dependency_injection/main.dart';
+import 'package:mockito/mockito.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -28,4 +24,31 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  testWidgets(
+      'Demonstrate substituting counter implementation for test purposes',
+          (WidgetTester tester) async {
+        // Arrange
+        final mockCounterNotifier = _MockCounterNotifier();
+
+        await tester.pumpWidget(
+          ProviderScope(
+              child: MyApp(),
+              overrides: [
+                counterNotifierProvider.overrideWithValue(mockCounterNotifier)
+              ],)
+        );
+
+            // Act
+            await tester.tap(find.byIcon(Icons.add));
+            await tester.pump();
+
+            // Assert
+            verify(mockCounterNotifier.increment()).called(1);
+  });
+}
+
+class _MockCounterNotifier extends Mock implements CounterNotifier {
+  @override
+  int get count => 0;
 }
